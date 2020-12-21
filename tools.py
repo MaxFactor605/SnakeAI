@@ -30,6 +30,7 @@ def parse_cfg(file):
 params = parse_cfg('./settings.cfg')
 SCREEN_SIZE = params['screen_size']
 RANDOM_SEED = params['random_seed']
+CELL_SIZE = params['cell_size']
 if params['is_random_seed']:
     random.seed(RANDOM_SEED)
     numpy.random.seed(RANDOM_SEED)
@@ -71,8 +72,8 @@ def get_Xdata(snake, food, steps):
                     Xdata[7] = ((part.y - snake.head_y)**2 + (part.x - snake.head_x)**2)**0.5
     if snake.head_x in range(food.x-5, food.x+5) and snake.head_y in range(food.y-5, food.y+5):
             snake.add_part()
-            food_x = random.choice(range(0, SCREEN_SIZE - 20, 20))
-            food_y = random.choice(range(0, SCREEN_SIZE - 20, 20))
+            food_x = random.choice(range(0, SCREEN_SIZE - CELL_SIZE, CELL_SIZE))
+            food_y = random.choice(range(0, SCREEN_SIZE - CELL_SIZE, CELL_SIZE))
             food.respawn(food_x, food_y)
             snake.last_food = steps
     if snake.head_x == food.x:
@@ -109,9 +110,9 @@ def get_Xdata(snake, food, steps):
     
     Xdata[16] = snake.head_y
     Xdata[17] = ((SCREEN_SIZE-snake.head_x)**2 + (0-snake.head_y)**2)**0.5
-    Xdata[18] = SCREEN_SIZE - snake.head_x - 20
+    Xdata[18] = SCREEN_SIZE - snake.head_x - CELL_SIZE
     Xdata[19] = ((SCREEN_SIZE-snake.head_x)**2 + (SCREEN_SIZE-snake.head_y)**2)**0.5
-    Xdata[20] = SCREEN_SIZE - snake.head_y - 20
+    Xdata[20] = SCREEN_SIZE - snake.head_y - CELL_SIZE
     Xdata[21] = ((0-snake.head_x)**2 + (SCREEN_SIZE-snake.head_y)**2)**0.5
     Xdata[22] = snake.head_x
     Xdata[23] = ((0-snake.head_x)**2 + (0-snake.head_y)**2)**0.5
@@ -126,55 +127,55 @@ def get_Xdata(snake, food, steps):
     return Xdata
 
 def draw_grid(snake, Xdata, screen):
-    for x in range(0, SCREEN_SIZE, 20):
+    for x in range(0, SCREEN_SIZE, CELL_SIZE):
         pygame.draw.line(screen, (10, 10, 10), (x, 0), (x, SCREEN_SIZE))
-    for y in range(0, SCREEN_SIZE, 20):
+    for y in range(0, SCREEN_SIZE, CELL_SIZE):
         pygame.draw.line(screen, (10, 10, 10), (0, y), (SCREEN_SIZE, y))
     if Xdata[4] != 0:
-        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+10, snake.head_y+10), (SCREEN_SIZE, snake.head_y+10))
+        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (SCREEN_SIZE, snake.head_y+CELL_SIZE/2))
     else:
-        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+10, snake.head_y+10), (SCREEN_SIZE, snake.head_y+10))
+        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (SCREEN_SIZE, snake.head_y+CELL_SIZE/2))
     if Xdata[12] != 0:
-        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+10, snake.head_y+10), (0, snake.head_y+10))
+        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (0, snake.head_y+CELL_SIZE/2))
     else:
-        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+10, snake.head_y+10), (0, snake.head_y+10))
+        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (0, snake.head_y+CELL_SIZE/2))
     if Xdata[8] != 0:
-        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+10, snake.head_y+10), (snake.head_x+10, SCREEN_SIZE))
+        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (snake.head_x+CELL_SIZE/2, SCREEN_SIZE))
     else:
-        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+10, snake.head_y+10), (snake.head_x+10, SCREEN_SIZE))
+        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (snake.head_x+CELL_SIZE/2, SCREEN_SIZE))
     if Xdata[0] != 0:
-        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+10, snake.head_y+10), (snake.head_x+10, 0))
+        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (snake.head_x+CELL_SIZE/2, 0))
     else:
-        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+10, snake.head_y+10), (snake.head_x+10, 0))
+        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (snake.head_x+CELL_SIZE/2, 0))
     if Xdata[2] != 0:
         x = SCREEN_SIZE
-        y = (snake.head_y+10) - ((SCREEN_SIZE-(snake.head_x+10)))
-        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+10, snake.head_y+10), (x, y))
+        y = (snake.head_y+CELL_SIZE/2) - ((SCREEN_SIZE-(snake.head_x+CELL_SIZE/2)))
+        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (x, y))
     else:
         x = SCREEN_SIZE
-        y = (snake.head_y+10) - ((SCREEN_SIZE-(snake.head_x+10)))
-        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+10, snake.head_y+10), (x, y))
+        y = (snake.head_y+CELL_SIZE/2) - ((SCREEN_SIZE-(snake.head_x+CELL_SIZE/2)))
+        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (x, y))
     if Xdata[6] != 0:
         x = SCREEN_SIZE
-        y = (snake.head_y+10) + ((SCREEN_SIZE-(snake.head_x+10)))
-        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+10, snake.head_y+10), (x, y))
+        y = (snake.head_y+CELL_SIZE/2) + ((SCREEN_SIZE-(snake.head_x+CELL_SIZE/2)))
+        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (x, y))
     else:
         x = SCREEN_SIZE
-        y = (snake.head_y+10) + ((SCREEN_SIZE-(snake.head_x+10)))
-        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+10, snake.head_y+10), (x, y))
+        y = (snake.head_y+CELL_SIZE/2) + ((SCREEN_SIZE-(snake.head_x+CELL_SIZE/2)))
+        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (x, y))
     if Xdata[10] != 0:
         x = 0
-        y = (snake.head_y+10) + snake.head_x+10
-        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+10, snake.head_y+10), (x, y))
+        y = (snake.head_y+CELL_SIZE/2) + snake.head_x+CELL_SIZE/2
+        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (x, y))
     else:
         x = 0
-        y = (snake.head_y+10) + snake.head_x+10
-        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+10, snake.head_y+10), (x, y))
+        y = (snake.head_y+CELL_SIZE/2) + snake.head_x+CELL_SIZE/2
+        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (x, y))
     if Xdata[14] != 0:
         x = 0
-        y = (snake.head_y+10) - (snake.head_x+10)
-        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+10, snake.head_y+10), (x, y))
+        y = (snake.head_y+CELL_SIZE/2) - (snake.head_x+CELL_SIZE/2)
+        pygame.draw.line(screen, (0, 255, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (x, y))
     else:
         x = 0
-        y = (snake.head_y+10) - (snake.head_x+10)
-        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+10, snake.head_y+10), (x, y))
+        y = (snake.head_y+CELL_SIZE/2) - (snake.head_x+CELL_SIZE/2)
+        pygame.draw.line(screen, (255, 0, 0), (snake.head_x+CELL_SIZE/2, snake.head_y+CELL_SIZE/2), (x, y))

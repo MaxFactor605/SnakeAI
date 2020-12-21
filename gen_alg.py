@@ -23,6 +23,8 @@ P_C = params['base_percent']
 NET_LAYERS = params['net_layers']
 WEIGHTS_FOLDER = params['weights_folder']
 RANDOM_SEED = params['random_seed']
+CELL_SIZE = params['cell_size']
+SCREEN_SIZE_CELLS = SCREEN_SIZE/CELL_SIZE
 if params['selection_type'] == 'wheel':
     WHEEL_SELECTION = True
 else:
@@ -148,15 +150,15 @@ if __name__ == '__main__':
         start_time = pytime.time()
         screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE+30))
         screen.fill(BG_COLOR)
-        manager = pygame_gui.UIManager((300, 330))
-        rect = pygame.Rect((0, 310), (300, 315))
-        slider = pygame_gui.elements.ui_horizontal_slider.UIHorizontalSlider(rect, speed, [0, 100], manager)
+        manager = pygame_gui.UIManager((SCREEN_SIZE, SCREEN_SIZE+30))
+        rect = pygame.Rect((0, SCREEN_SIZE+10), (SCREEN_SIZE, SCREEN_SIZE+15))
+        slider = pygame_gui.elements.ui_horizontal_slider.UIHorizontalSlider(rect, speed, [0, 200], manager)
         clock = pygame.time.Clock()
         population_list = {}
         for i in range(POPULATION):
-            snake = Snake(120, 120, SNAKE_COLOR, screen)
-            food_x = random.choice(range(0, SCREEN_SIZE - 20, 20))
-            food_y = random.choice(range(0, SCREEN_SIZE - 20, 20))
+            snake = Snake(SCREEN_SIZE_CELLS//2*CELL_SIZE, SCREEN_SIZE_CELLS//2*CELL_SIZE, SNAKE_COLOR, screen)
+            food_x = random.choice(range(0, SCREEN_SIZE - CELL_SIZE, CELL_SIZE))
+            food_y = random.choice(range(0, SCREEN_SIZE - CELL_SIZE, CELL_SIZE))
             food = Food(food_x, food_y, FOOD_COLOR, screen)
             population_list[i] = [snake, food]
 

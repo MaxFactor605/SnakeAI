@@ -16,7 +16,7 @@ CELL_SIZE = params['cell_size']
 BG_COLOR = params['bg_color']
 FOOD_COLOR = params['food_color']
 SNAKE_COLOR = params['snake_color']
-
+GRID_COLOR = params['grid_color']
 class Snake_tail():
     def __init__(self, x, y, direction, color, screen):
         self.x = x
@@ -170,8 +170,8 @@ if __name__ == '__main__':
     screen.fill(BG_COLOR)
     snake = Snake(0, 0, SNAKE_COLOR, screen)
     
-    food_x = random.choice(range(0, SCREEN_SIZE - 20, 20))
-    food_y = random.choice(range(0, SCREEN_SIZE - 20, 20))
+    food_x = random.choice(range(0, SCREEN_SIZE - CELL_SIZE, CELL_SIZE))
+    food_y = random.choice(range(0, SCREEN_SIZE - CELL_SIZE, CELL_SIZE))
     Food = Food(food_x, food_y, FOOD_COLOR, screen)
     pygame.display.update()
     while True:
@@ -193,12 +193,12 @@ if __name__ == '__main__':
                 elif event.key == pygame.K_ESCAPE:
                     input()
 
-        if snake.head_x in range(food_x-15, food_x+15) and snake.head_y in range(food_y-15, food_y+15):
+        if snake.head_x == food_x and snake.head_y == food_y:
             snake.add_part()
-            food_x = random.choice(range(0, SCREEN_SIZE - 20, 20))
-            food_y = random.choice(range(0, SCREEN_SIZE - 20, 20))
+            food_x = random.choice(range(0, SCREEN_SIZE - CELL_SIZE, CELL_SIZE))
+            food_y = random.choice(range(0, SCREEN_SIZE - CELL_SIZE, CELL_SIZE))
         for part in snake.parts[1:]:
-            if snake.head_x in range(part.x-6, part.x+6) and snake.head_y in range(part.y-6, part.y+6):
+            if snake.head_x == part.x and snake.head_y == part.y:
                 print('END GAME')
                 sys.exit()
 
@@ -209,10 +209,10 @@ if __name__ == '__main__':
         Food.respawn(food_x, food_y)
         textsurf = font.render('Score: {0}'.format(snake.length), False, (0, 0, 0))
         screen.blit(textsurf, (0,0))
-        for x in range(0, SCREEN_SIZE, 20):
-            pygame.draw.line(screen, (10, 10, 10), (x, 0), (x, SCREEN_SIZE))
-        for y in range(0, SCREEN_SIZE, 20):
-            pygame.draw.line(screen, (10, 10, 10), (0, y), (SCREEN_SIZE, y))
+        for x in range(0, SCREEN_SIZE, CELL_SIZE):
+            pygame.draw.line(screen, GRID_COLOR, (x, 0), (x, SCREEN_SIZE))
+        for y in range(0, SCREEN_SIZE, CELL_SIZE):
+            pygame.draw.line(screen, GRID_COLOR, (0, y), (SCREEN_SIZE, y))
         pygame.display.update()
         pygame.time.delay(60)
 
